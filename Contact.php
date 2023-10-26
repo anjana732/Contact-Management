@@ -60,7 +60,7 @@
                         <td>{$row['relationship']}</td>
                         <td>
                             <a href='Edit.php?id={$row['Sno']}'><i class='fa-solid fa-file-pen'></i></a>
-                            <a href='Delete.html?id={$row['Sno']}'><i class='fa-solid fa-trash'></i></a>
+                            <a href='Delete.php?id={$row['Sno']}'><i class='fa-solid fa-trash'></i></a>
                         </td>
                     </tr>
                     ";

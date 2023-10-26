@@ -1,98 +1,57 @@
 <?php
-    $server ="localhost";
-    $username ="root";
-    $password ="";
-    $database = "ContactManagement";
+$server = "localhost";
+$username = "root";
+$password = "";
+$db_name = "ContactManagement";
+$con = mysqli_connect($server, $username, $password, $db_name);
 
-    $conn = new mysqli($server, $username, $password, $database);
-
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    $Sno="";
-    $name = "";
-    $email = "";
-    $phNum = "";
-    $relationship = "";
-
-    $errorMessage = "";
-    $successMessage ="";
-
-  /*  if($_SERVER["REQUEST_METHOD"]=="GET"){
-        if(!isset($_GET["Sno"])){
-            header("location: index.html");
-            exit;
-        }
-    
-    $Sno = $_GET["Sno"];
-
-    $sql="SELECT * FROM Contact where Sno=$Sno";
-    $result = $connection->query($sql);
-    $row = $result->fetch_assoc();
-
-    if(!$row){
-        header("location: index.html");
-        exit;
-    }
-
-    $name = $row["name"];
-    $email = $row["email"];
-    $phNum = $row["phNum"];
-    $relationship = $row["relationship"];
-    
-    }
-   else {
-    $Sno = $row["Sno"];
-    $name = $row["name"];
-    $email = $row["email"];
-    $phNum = $row["phNum"];
-    $relationship = $row["relationship"];
-   
-    $sql = "UPDATE Contact SET name='$name', email= '$email', phNum=$phNum, relationship='$relationship' WHERE Sno=$Sno";
-
-    $result = $connection->query($sql);
-
-    if(!$result){
-        $errorMessage = "Invalid query" .$connection->error;
-        break;
-    }
-
-    $successMessage = "Contact Added Successfully";
-    header("location: index.html");
-    exit;
-
-}*/
-if($_SERVER["REQUEST_METHOD"] == "GET") {
-    //... [Your GET request handling remains largely unchanged]
-    
-    $sql = "SELECT * FROM Contact WHERE Sno=$Sno";
-    $result = $conn->query($sql);  // changed $connection to $conn
-    //... rest of the GET handling code remains unchanged
+// Check connection
+if (!$con) {
+    die("Connection failed: " . mysqli_connect_error());
 }
-else {
-    // Get data from POST
-    $Sno = $_POST["Sno"];
+
+// Assuming you want to edit the contact with a specific ID
+$id = $_GET['id'];
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Gather data from POST request
     $name = $_POST["name"];
     $email = $_POST["email"];
-    $phNum = $_POST["phNum"];
+    $phNum= $_POST["phNum"];
     $relationship = $_POST["relationship"];
+    //... gather other fields similarly...
 
-    // Update using prepared statement
-    $stmt = $conn->prepare("UPDATE Contact SET name=?, email=?, phNum=?, relationship=? WHERE Sno=?");
-    $stmt->bind_param('ssiss', $name, $email, $phNum, $relationship, $Sno);
+    // Use prepared statements for updating to avoid SQL injection
+    $stmt = $con->prepare("UPDATE Contact SET name=?, email=?, phNum=?, relationship=? WHERE Sno=?");
+    $stmt->bind_param("siss", $name, $phNum, $email, $relationship, $id);  // 'ssi' => string, string, integer
 
-
-    if($stmt->execute()) {
-        $successMessage = "Contact Updated Successfully";
-        header("location: Edit.php?Sno=".$Sno);
-        exit;
+    if ($stmt->execute()) {
+        echo "Record Updated";
+        header('location:Contact.php');
+        exit();
     } else {
-        $errorMessage = "Invalid query: " . $stmt->error;
+        echo "Failed to update";
+    }
+    $stmt->close();
+} else {
+    // For GET request, retrieve current details for the contact
+    $stmt = $con->prepare("SELECT * FROM Contact WHERE Sno=?");
+    $stmt->bind_param("i", $id);
+
+    if ($stmt->execute()) {
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        // Now, you can use $row['name'], $row['email'], etc. to display current details in your HTML form
+    } else {
+        echo "Error fetching contact details";
     }
     $stmt->close();
 }
+
+$con->close();
 ?>
+
+// Your HTML form for editing goes here. Use PHP to populate current details.
 
 <!DOCTYPE html>
 <html lang="en">
@@ -104,7 +63,7 @@ else {
 <body>
     <div class="container">
         <h2>Add Contact</h2>
-        <form action="Edit.php" method="post">
+        <form method="post">
             <input type="hidden" value="<?php echo $Sno; ?>">
             <label>Name</label>
             <input type="text" name="name" id="name" value="<?php echo $name; ?>">
