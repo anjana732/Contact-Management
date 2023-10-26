@@ -16,7 +16,7 @@
     </nav>
     <div class="header">
         <h3>Manage Contacts </h3>
-        <button type="submit"><i class="fa-solid fa-plus"></i> Add Contact</button>
+        <button onclick="openNewPage()" type="submit"><i class="fa-solid fa-plus"></i> Add Contact</button>
     </div>
     <h3>List of Contacts</h3>
     <table class="tab">
@@ -59,7 +59,7 @@
                         <td>{$row['phNum']}</td>
                         <td>{$row['relationship']}</td>
                         <td>
-                            <a href='Edit.html?id={$row['Sno']}'><i class='fa-solid fa-file-pen'></i></a>
+                            <a href='Edit.php?id={$row['Sno']}'><i class='fa-solid fa-file-pen'></i></a>
                             <a href='Delete.html?id={$row['Sno']}'><i class='fa-solid fa-trash'></i></a>
                         </td>
                     </tr>
@@ -68,5 +68,10 @@
             ?>
         </tbody>
     </table>
+    <script>
+function openNewPage() {
+    window.open('AddContact.php', '_blank');
+}
+</script>
 </body>
 </html>
