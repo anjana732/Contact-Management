@@ -18,8 +18,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $phNum= $_POST["phNum"];
     $relationship = $_POST["relationship"];
 
-    $stmt = $con->prepare("UPDATE Contact SET name=?, email=?, phNum=?, relationship=? WHERE Sno=?");
-    $stmt->bind_param("sissi", $name, $phNum, $email, $relationship, $id); 
+    // $stmt = $con->prepare("UPDATE Contact SET name=?, email=?, phNum=?, relationship=? WHERE Sno=?");
+    // $stmt->bind_param("sissi", $name, $phNum, $email, $relationship, $id); 
+
+    $stmt = "UPDATE `Contact` SET `name`= `$name`,`email`='$email',`phNum`='$phNum',`relationship`='$relationship' WHERE Sno='$id';";
 
     if ($stmt->execute()) {
         echo "Record Updated";
@@ -47,7 +49,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $con->close();
 ?>
 
-// Your HTML form for editing goes here. Use PHP to populate current details.
 
 <!DOCTYPE html>
 <html lang="en">
