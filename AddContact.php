@@ -31,7 +31,6 @@
     }
 ?>
 
-<!-- Your HTML content goes here -->
 
 <!DOCTYPE html>
 <html lang="en">
