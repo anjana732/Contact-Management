@@ -38,6 +38,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Contact</title>
+    <link rel="stylesheet" type="text/css" href="AddContact.css">
 </head>
 <body>
     <div class="container">
@@ -51,7 +52,7 @@
             <input type="tel" name="phNum" id="phNum">
             <label>Relationship</label>
             <input type="text" name="relationship" id="reletionship">
-            <button type="submit">Submit</button>
+            <button class="btn" type="submit">Submit</button>
             <a href="Contact.php">Cancel</a>
         </form>
     </div>
